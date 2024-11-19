@@ -6,7 +6,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
-public class BinarySearchTree{
+public class BinarySearchTree {
 
     private Node root;
     private final DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
@@ -16,141 +16,136 @@ public class BinarySearchTree{
     }
 
     public void insertByDates(CSVRecord record) {
-        root = insertRecByDates(root, record);
+        root = insertIterByDates(root, record);
     }
+
     public void insertByPrice(CSVRecord record) {
-        root = insertByPriceRec(root, record);
+        root = insertIterByPrice(root, record);
     }
+
     public void insertByAchievements(CSVRecord record) {
-        root = insertByAchievementsRec(root, record);
+        root = insertIterByAchievements(root, record);
     }
-    
-    public void clear(){
+
+    public void clear() {
         root = null;
     }
-    private Node insertRecByDates(Node root, CSVRecord record) {
-        if (root == null) {
-            root = new Node(record);
-            return root;
-        }
 
-        LocalDate recordDate = LocalDate.parse(record.get(2), dateFormatter);
-        LocalDate rootDate = LocalDate.parse(root.record.get(2), dateFormatter);
+    private Node insertIterByDates(Node root, CSVRecord record) {
+        LocalDate currentDate = LocalDate.parse(record.get(2), dateFormatter);
 
-        if (recordDate.isBefore(rootDate)) {
-            root.left = insertRecByDates(root.left, record);
-        } else if (recordDate.isAfter(rootDate)) {
-            root.right = insertRecByDates(root.right, record);
-        } else {
-            root.right = insertRecByDates(root.right, record);
-        }
+        if (root == null)
+            return new Node(record);
 
-        return root;
-    }
-    private Node insertRecByDatesOrden(Node root, CSVRecord record) {
-        if (root == null) {
-            root = new Node(record);
-            return root;
-        }
 
-        LocalDate recordDate = LocalDate.parse(record.get(2), dateFormatter);
-        LocalDate rootDate = LocalDate.parse(root.record.get(2), dateFormatter);
+        Node currentNode = root;
+        while (true) {
+            LocalDate rootDate = LocalDate.parse(currentNode.record.get(2), dateFormatter);
 
-        if (recordDate.isBefore(rootDate)) {
-            root.left = insertRecByDates(root.left, record);
-        } else if (recordDate.isAfter(rootDate)) {
-            root.right = insertRecByDates(root.right, record);
-        } else {
-            root.left = insertRecByDates(root.left, record);
+            if (currentDate.isBefore(rootDate)) {
+                if (currentNode.left == null) {
+                    currentNode.left = new Node(record);
+                    break;
+                }
+                currentNode = currentNode.left;
+            } else {
+                if (currentNode.right == null) {
+                    currentNode.right = new Node(record);
+                    break;
+                }
+                currentNode = currentNode.right;
+            }
         }
 
         return root;
     }
 
-    private Node insertByPriceRec(Node root, CSVRecord record) {
-        if (root == null) {
-            root = new Node(record);
-            return root;
-        }
+    private Node insertIterByPrice(Node root, CSVRecord record) {
+        double currentPrice = Double.parseDouble(record.get(6));
 
-        double recordPrice = Double.parseDouble(record.get(6));
-        double rootPrice = Double.parseDouble(root.record.get(6));
+        if (root == null)
+            return new Node(record);
 
-        if (recordPrice < rootPrice) {
-            root.left = insertByPriceRec(root.left, record);
-        } else if (recordPrice > rootPrice) {
-            root.right = insertByPriceRec(root.right, record);
-        } else {
-            root.right = insertByPriceRec(root.right, record);
-        }
 
-        return root;
-    }
+        Node currentNode = root;
+        while (true) {
+            double rootPrice = Double.parseDouble(currentNode.record.get(6));
 
-    private Node insertByAchievementsRec(Node root, CSVRecord record) {
-        if (root == null) {
-            root = new Node(record);
-            return root;
-        }
-
-        int recordAchievements = Integer.parseInt(record.get(26));
-        int rootAchievements = Integer.parseInt(root.record.get(26));
-
-        if (recordAchievements > rootAchievements) {
-            root.left = insertByAchievementsRec(root.left, record);
-        } else if (recordAchievements < rootAchievements) {
-            root.right = insertByAchievementsRec(root.right, record);
-        } else {
-            root.right = insertByAchievementsRec(root.right, record);
+            if (currentPrice < rootPrice) {
+                if (currentNode.left == null) {
+                    currentNode.left = new Node(record);
+                    break;
+                }
+                currentNode = currentNode.left;
+            } else {
+                if (currentNode.right == null) {
+                    currentNode.right = new Node(record);
+                    break;
+                }
+                currentNode = currentNode.right;
+            }
         }
 
         return root;
     }
 
-    // Método para imprimir a árvore em ordem pela data
-    public void inorderByDates() {
-        inorderRecByDates(root);
-    }
-    public void inorderByPrice() {
-        inorderRecByPrice(root);
-    }
-    public void inorderByAchievements() {
-        inorderByAchievementsRec(root);
-    }
-    private void inorderByAchievementsRec(Node root) {
-        if (root != null) {
-            inorderByAchievementsRec(root.left);
-            System.out.println("Achievements: " + root.record.get(26) + " | Record: " + root.record);
-            inorderByAchievementsRec(root.right);
-        }
-    }
-    private void inorderRecByDates(Node root) {
-        if (root != null) {
-            inorderRecByDates(root.left);
-            System.out.println("Date: " + root.record.get(2) + " | Record: " + root.record);
-            inorderRecByDates(root.right);
-        }
-    }
+    private Node insertIterByAchievements(Node root, CSVRecord record) {
+        int currentAchievements = Integer.parseInt(record.get(26));
 
-    private void inorderRecByPrice(Node root) {
-        if (root != null) {
-            inorderRecByPrice(root.left);
-            System.out.println("Price: " + root.record.get(6) + " | Record: " + root.record);
-            inorderRecByPrice(root.right);
+        if (root == null)
+            return new Node(record);
+
+
+        Node currentNode = root;
+        while (true) {
+            int rootAchievements = Integer.parseInt(currentNode.record.get(26));
+
+            if (currentAchievements > rootAchievements) {
+                if (currentNode.left == null) {
+                    currentNode.left = new Node(record);
+                    break;
+                }
+                currentNode = currentNode.left;
+            } else {
+                if (currentNode.right == null) {
+                    currentNode.right = new Node(record);
+                    break;
+                }
+                currentNode = currentNode.right;
+            }
         }
+
+        return root;
     }
 
     public List<CSVRecord> toList() {
         List<CSVRecord> recordsList = new ArrayList<>();
-        inorderToList(root, recordsList);
+        inorderTraversal(root, recordsList);
         return recordsList;
     }
 
-    private void inorderToList(Node node, List<CSVRecord> list) {
-        if (node != null) {
-            inorderToList(node.left, list);
-            list.add(node.record);  // Adiciona o CSVRecord à lista
-            inorderToList(node.right, list);
+    private void inorderTraversal(Node root, List<CSVRecord> list) {
+        Node currentNode = root;
+
+        while (currentNode != null) {
+            if (currentNode.left == null) {
+                list.add(currentNode.record);
+                currentNode = currentNode.right;
+            } else {
+                Node predecessor = currentNode.left;
+                while (predecessor.right != null && predecessor.right != currentNode) {
+                    predecessor = predecessor.right;
+                }
+
+                if (predecessor.right == null) {
+                    predecessor.right = currentNode;
+                    currentNode = currentNode.left;
+                } else {
+                    predecessor.right = null;
+                    list.add(currentNode.record);
+                    currentNode = currentNode.right;
+                }
+            }
         }
     }
 

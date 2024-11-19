@@ -1,4 +1,4 @@
-package org.example;
+package ordenations;
 
 import avlTree.AvlTree;
 import org.apache.commons.csv.CSVRecord;
@@ -9,199 +9,164 @@ import java.util.List;
 
 public class OrdenationsAvlTree extends Ordenations {
     public static void mainOrdenationsAvlTree() throws IOException {
-        long startTime, endTime, execTime, memoryBefore, memoryAfter, memoryUsed;
+        long startTime, endTime, execTime;
         Path pathToGamesFormated = Paths.get("src", "main", "java", "database", "games_formated_release_data.csv");
         CSVRecord[] elements = readCsv(pathToGamesFormated);
-        System.out.println("Iniciando operações com datas...");
+        System.out.println("ORDENAÇÕES POR DATAS");
         AvlTree treeByDates = new AvlTree();
 
-        System.out.println("Ordenação por preços a partir da base original");
+        System.out.println("Ordenação por datas Médio caso");
         assert elements != null;
         startTime = System.currentTimeMillis();
-        memoryBefore = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory();
         for (CSVRecord record : elements) {
             treeByDates.insertByDates(record);
         }
-        memoryAfter = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory();
-        memoryUsed = Math.abs((memoryAfter - memoryBefore) / (1024 * 1024));
         endTime = System.currentTimeMillis();
         execTime = endTime - startTime;
         System.out.println("Tempo de execução: " + execTime + " Millisegundos ou " + execTime/1000 + " Segundos");
-        System.out.println("Memória utilizada: " + memoryUsed + " Megabytes\n");
 
         List<CSVRecord> treeElements = treeByDates.toList();
         writeToCsv("games_releaseDates_AvlTree_casoMedio.csv", treeElements);
 
-        System.out.println("Ordenação por datas a partir da base já ordenada");
+        System.out.println("Ordenação por datas Pior caso(Elementos em ordem)");
         Path filePath = Paths.get("src", "main", "java", "database", "games_releaseDates_AvlTree_casoMedio.csv");
         elements = readCsv(filePath);
         treeByDates.clear();
         assert elements != null;
 
         startTime = System.currentTimeMillis();
-        memoryBefore = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory();
         for (CSVRecord record : elements) {
             treeByDates.insertByDates(record);
         }
-        memoryAfter = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory();
-        memoryUsed = Math.abs((memoryAfter - memoryBefore) / (1024 * 1024));
         endTime = System.currentTimeMillis();
         execTime = endTime - startTime;
         System.out.println("Tempo de execução: " + execTime + " Millisegundos ou " + execTime/1000 + " Segundos");
-        System.out.println("Memória utilizada: " + memoryUsed + " Megabytes\n");
 
         treeElements = treeByDates.toList();
-        writeToCsv("games_releaseDates_AvlTree_MelhorCaso.csv", treeElements);
+        writeToCsv("games_releaseDates_AvlTree_piorCaso.csv", treeElements);
 
         elements = readCsv(filePath);
         elements = invertElements(elements);
         treeByDates.clear();
 
-        System.out.println("Ordenação por Datas a partir da base ordenada de maneira inversa");
+        System.out.println("Ordenação por Datas Melhor caso(Elementos em ordem inversa)");
         assert elements != null;
         startTime = System.currentTimeMillis();
-        memoryBefore = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory();
         for (CSVRecord record : elements) {
             treeByDates.insertByDates(record);
         }
-        memoryAfter = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory();
-        memoryUsed = Math.abs((memoryAfter - memoryBefore) / (1024 * 1024));
         endTime = System.currentTimeMillis();
         execTime = endTime - startTime;
         System.out.println("Tempo de execução: " + execTime + " Millisegundos ou " + execTime/1000 + " Segundos");
-        System.out.println("Memória utilizada: " + memoryUsed + " Megabytes\n");
 
         treeElements = treeByDates.toList();
-        writeToCsv("games_releaseDates_AvlTree_PiorCaso.csv", treeElements);
+        writeToCsv("games_releaseDates_AvlTree_melhorCaso.csv", treeElements);
 
 
-        System.out.println("Iniciando operações com preços...");
+        System.out.println("ORDENAÇÕES POR PREÇOS");
         elements = readCsv(pathToGamesFormated);
         AvlTree treeByPrice = new AvlTree();
 
-        System.out.println("Ordenação por preços a partir da base original");
+        System.out.println("Ordenação por preços Médio caso");
         assert elements != null;
         startTime = System.currentTimeMillis();
-        memoryBefore = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory();
         for (CSVRecord record : elements) {
             treeByPrice.insertByPrice(record);
         }
-        memoryAfter = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory();
-        memoryUsed = Math.abs((memoryAfter - memoryBefore) / (1024 * 1024));
         endTime = System.currentTimeMillis();
         execTime = endTime - startTime;
         System.out.println("Tempo de execução: " + execTime + " Millisegundos ou " + execTime/1000 + " Segundos");
-        System.out.println("Memória utilizada: " + memoryUsed + " Megabytes\n");
 
         treeElements = treeByPrice.toList();
         writeToCsv("games_price_AvlTree_casoMedio.csv", treeElements);
 
-        System.out.println("Ordenação por preços a partir da base já ordenada");
+
         filePath = Paths.get("src", "main", "java", "database", "games_price_AvlTree_casoMedio.csv");
         elements = readCsv(filePath);
         treeByPrice.clear();
         assert elements != null;
 
+        System.out.println("Ordenação por preços pior caso(Elementos em ordem)");
         startTime = System.currentTimeMillis();
-        memoryBefore = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory();
         for (CSVRecord record : elements) {
             treeByPrice.insertByPrice(record);
         }
-        memoryAfter = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory();
-        memoryUsed = Math.abs((memoryAfter - memoryBefore) / (1024 * 1024));
         endTime = System.currentTimeMillis();
         execTime = endTime - startTime;
         System.out.println("Tempo de execução: " + execTime + " Millisegundos ou " + execTime/1000 + " Segundos");
-        System.out.println("Memória utilizada: " + memoryUsed + " Megabytes\n");
 
         treeElements = treeByPrice.toList();
-        writeToCsv("games_price_AvlTree_MelhorCaso.csv", treeElements);
+        writeToCsv("games_price_AvlTree_piorCaso.csv", treeElements);
 
         elements = readCsv(filePath);
         elements = invertElements(elements);
         treeByPrice.clear();
 
-        System.out.println("Ordenação por preços a partir da base ordenada de maneira inversa");
+        System.out.println("Ordenação por preços Melhor caso(Elementos em ordem inversa)");
         assert elements != null;
         startTime = System.currentTimeMillis();
-        memoryBefore = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory();
         for (CSVRecord record : elements) {
             treeByPrice.insertByPrice(record);
         }
-        memoryAfter = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory();
-        memoryUsed = Math.abs((memoryAfter - memoryBefore) / (1024 * 1024));
         endTime = System.currentTimeMillis();
         execTime = endTime - startTime;
         System.out.println("Tempo de execução: " + execTime + " Millisegundos ou " + execTime/1000 + " Segundos");
-        System.out.println("Memória utilizada: " + memoryUsed + " Megabytes\n");
 
         treeElements = treeByPrice.toList();
-        writeToCsv("games_price_AvlTree_PiorCaso.csv", treeElements);
+        writeToCsv("games_price_AvlTree_melhorCaso.csv", treeElements);
 
-        System.out.println("Iniciando operações com conquistas...");
+        System.out.println("ORDENAÇÕES POR CONQUISTAS");
 
         elements = readCsv(pathToGamesFormated);
         AvlTree treeByAchievements = new AvlTree();
 
-        System.out.println("Ordenação por conquistas a partir da base original");
+        System.out.println("Ordenação por conquistas Médio Caso");
         assert elements != null;
         startTime = System.currentTimeMillis();
-        memoryBefore = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory();
         for (CSVRecord record : elements) {
             treeByAchievements.insertByAchievements(record);
         }
-        memoryAfter = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory();
-        memoryUsed = Math.abs((memoryAfter - memoryBefore) / (1024 * 1024));
         endTime = System.currentTimeMillis();
         execTime = endTime - startTime;
         System.out.println("Tempo de execução: " + execTime + " Millisegundos ou " + execTime/1000 + " Segundos");
-        System.out.println("Memória utilizada: " + memoryUsed + " Megabytes\n");
 
         treeElements = treeByAchievements.toList();
         writeToCsv("games_achievements_AvlTree_casoMedio.csv", treeElements);
 
-        System.out.println("Ordenação por conquistas a partir da base já ordenada");
+
         filePath = Paths.get("src", "main", "java", "database", "games_achievements_AvlTree_casoMedio.csv");
         elements = readCsv(filePath);
         treeByAchievements.clear();
         assert elements != null;
 
+        System.out.println("Ordenação por conquistas Pior Caso(Elementos em Ordem)");
         startTime = System.currentTimeMillis();
-        memoryBefore = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory();
         for (CSVRecord record : elements) {
             treeByAchievements.insertByAchievements(record);
         }
-        memoryAfter = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory();
-        memoryUsed = Math.abs((memoryAfter - memoryBefore) / (1024 * 1024));
         endTime = System.currentTimeMillis();
         execTime = endTime - startTime;
         System.out.println("Tempo de execução: " + execTime + " Millisegundos ou " + execTime/1000 + " Segundos");
-        System.out.println("Memória utilizada: " + memoryUsed + " Megabytes\n");
 
         treeElements = treeByAchievements.toList();
-        writeToCsv("games_achievements_AvlTree_MelhorCaso.csv", treeElements);
+        writeToCsv("games_achievements_AvlTree_piorCaso.csv", treeElements);
 
         elements = readCsv(filePath);
         elements = invertElements(elements);
         treeByAchievements.clear();
 
-        System.out.println("Ordenação por conquistas a partir da base ordenada de maneira inversa");
+        System.out.println("Ordenação por conquistas Melhor caso(Elementos em ordem inversa)");
         assert elements != null;
         startTime = System.currentTimeMillis();
-        memoryBefore = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory();
         for (CSVRecord record : elements) {
             treeByAchievements.insertByAchievements(record);
         }
-        memoryAfter = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory();
-        memoryUsed = Math.abs((memoryAfter - memoryBefore) / (1024 * 1024));
         endTime = System.currentTimeMillis();
         execTime = endTime - startTime;
         System.out.println("Tempo de execução: " + execTime + " Millisegundos ou " + execTime/1000 + " Segundos");
-        System.out.println("Memória utilizada: " + memoryUsed + " Megabytes\n");
 
         treeElements = treeByAchievements.toList();
-        writeToCsv("games_achievements_AvlTree_PiorCaso.csv", treeElements);
+        writeToCsv("games_achievements_AvlTree_melhorCaso.csv", treeElements);
 
-        System.out.println("Foram executadas todas as operações usando a árvore AVL.");
     }
 }
