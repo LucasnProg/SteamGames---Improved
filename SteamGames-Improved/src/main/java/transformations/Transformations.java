@@ -113,10 +113,10 @@ public class Transformations {
 
     public static void mainTransformations() throws IOException {
         Path pathToGames = Paths.get("src","main","java","database","games.csv");
-        Path pathToGamesFormated = Paths.get("src","main","java","database","games_formated_release_data.csv");
         System.out.println("Fazendo a primeira transformação...");
         toReleaseDate(pathToGames);
         System.out.println("Pronto\n");
+        Path pathToGamesFormated = Paths.get("src","main","java","database","games_formated_release_data.csv");
         System.out.println("Fazendo a segunda transformação...");
         getLinuxGames(pathToGamesFormated);
         System.out.println("Pronto\n");
